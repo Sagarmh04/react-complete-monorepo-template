@@ -1,0 +1,12 @@
+{
+  "name": "@studiovault/types",
+  "version": "1.0.0",
+  "private": true,
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@studiovault/typescript-config": "workspace:^"
+  }
+}

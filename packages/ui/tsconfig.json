@@ -1,0 +1,4 @@
+{
+  "extends": "@studiovault/typescript-config/react.json",
+  "include": ["src"]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "react-complete-monorepo-template",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "create:web": "node scripts/create-web.mjs",
+    "create:desktop": "node scripts/create-desktop.mjs",
+    "create:mobile": "node scripts/create-mobile.mjs",
+    "create:worker": "node scripts/create-worker.mjs",
+    "create:node-service": "node scripts/create-node-service.mjs"
+  },
+  "devDependencies": {
+    "turbo": "2.8.0",
+    "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup": "3.29.4"
+    }
+  }
+}

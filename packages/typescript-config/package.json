@@ -1,0 +1,13 @@
+{
+  "name": "@studiovault/typescript-config",
+  "version": "1.0.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "base.json",
+    "react.json",
+    "nextjs.json"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@studiovault/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.js",
+  "files": ["index.js"],
+  "peerDependencies": {
+    "eslint": "9.x"
+  }
+}
