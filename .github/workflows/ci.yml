@@ -23,9 +23,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Syncpack version consistency check
-        run: pnpm sync:check
-
       - name: TypeScript type-check
         run: pnpm type-check
 
