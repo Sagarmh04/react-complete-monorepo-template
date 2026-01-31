@@ -52,18 +52,6 @@ execSync("pnpm add -D @studiovault/typescript-config --workspace", {
   stdio: "inherit",
 });
 
-/**
- * Step 3.5: Enforce constitutional React version
- * Expo SDK 54 installs React 19.x; we enforce exact 19.1.0.
- * If Expo scaffold drifts, override still wins.
- */
-console.log("\n✅ Enforcing constitutional React version...");
-
-execSync(
-  "pnpm add react react-dom -E && pnpm add -D @types/react @types/react-dom -E",
-  { stdio: "inherit" }
-);
-
 console.log("\n✅ Expo config preserved (no tsconfig overwrite).");
 
 console.log("\n🎉 Mobile app created successfully!");

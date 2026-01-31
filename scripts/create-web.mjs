@@ -58,18 +58,6 @@ execSync(
 );
 
 /**
- * Step 3.5: Enforce constitutional React version
- * Root pnpm.overrides pins react@19.1.0 (Expo SDK 54 canonical).
- * -E flag installs exact version, override guarantees 19.1.0.
- */
-console.log("\n✅ Enforcing constitutional React version...");
-
-execSync(
-  "pnpm add react react-dom -E && pnpm add -D @types/react @types/react-dom -E",
-  { stdio: "inherit" }
-);
-
-/**
  * Step 4: Patch next.config.ts safely
  */
 console.log("\n✅ Checking next.config.ts for monorepo compatibility...");

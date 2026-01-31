@@ -160,32 +160,29 @@ if (!fs.existsSync(lockfilePath)) {
 
   /**
    * Constitutional enforcement:
-   * Fail if ANY React version other than 19.1.0 exists.
-   * This catches drift, not just duplication.
+   * 1. Detect all React versions (format-agnostic)
+   * 2. Fail if multiple versions exist
+   * 3. Fail if version doesn't match constitutional 19.1.0
    */
-  const matches = rawLock.match(/(?<!@types\/)react@19\.1\.0/g) || [];
+  const all = rawLock.match(/(?<!@types\/)react@[0-9]+\.[0-9]+\.[0-9]+/g) || [];
+  const unique = [...new Set(all)];
 
-  if (matches.length === 0) {
+  if (unique.length === 0) {
+    warn("React runtime not found in lockfile yet (no apps installed).");
+  } else if (unique.length !== 1) {
     fail(
-      "Constitutional React version (19.1.0) not found.\n" +
-      "Root pnpm.overrides may not be applied.\n" +
-      "Run: rm -rf node_modules pnpm-lock.yaml && pnpm install"
-    );
-  }
-
-  // Check for ANY other React version (violation)
-  const allReactVersions = rawLock.match(/(?<!@types\/)react@[0-9]+\.[0-9]+\.[0-9]+/g) || [];
-  const unique = [...new Set(allReactVersions)];
-
-  if (unique.length > 1 || (unique.length === 1 && unique[0] !== "react@19.1.0")) {
-    fail(
-      `Constitutional violation detected:\n   Expected: react@19.1.0\n   Found: ${unique.join(
+      `Multiple React runtimes detected:\n   ${unique.join(
         "\n   "
       )}\n\nThis WILL cause Invalid Hook Call bugs.\nRun clean install immediately.`
     );
+  } else if (unique[0] !== "react@19.1.0") {
+    fail(
+      `React version drift detected:\n   Expected: react@19.1.0\n   Found: ${unique[0]
+      }\n\nConstitutional override not applied.\nRun: rm -rf node_modules pnpm-lock.yaml && pnpm install`
+    );
+  } else {
+    ok("Single React runtime detected (react@19.1.0)");
   }
-
-  ok("Single React runtime detected (react@19.1.0)");
 }
 
 console.log("\n🔎 Checking React dependency law...");

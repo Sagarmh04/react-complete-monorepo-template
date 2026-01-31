@@ -53,18 +53,6 @@ execSync("pnpm add -D @studiovault/typescript-config --workspace", {
 });
 
 /**
- * Step 3.5: Enforce constitutional React version
- * Electron-Vite defaults to React 18.x, we force upward to 19.1.0.
- * Root pnpm.overrides ensures exact version.
- */
-console.log("\n✅ Enforcing constitutional React version...");
-
-execSync(
-  "pnpm add react react-dom -E && pnpm add -D @types/react @types/react-dom -E",
-  { stdio: "inherit" }
-);
-
-/**
  * Step 4: Patch tsconfig.app.json safely (do not overwrite structure)
  */
 console.log("\n✅ Patching tsconfig.app.json (minimal extend merge)...");
