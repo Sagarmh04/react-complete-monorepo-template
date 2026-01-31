@@ -75,8 +75,7 @@ const raw = fs.readFileSync(nextConfigPath, "utf8");
 /**
  * If already patched (marker present), do nothing.
  */
-if (raw.includes(`"_studiovault": "StudioVault Monorepo Fix"`)
-) {
+if (raw.includes("StudioVault Monorepo Fix")) {
   console.log("✅ Already patched. Skipping.");
 } else {
   console.log("✅ Applying StudioVault transpilePackages patch...");
