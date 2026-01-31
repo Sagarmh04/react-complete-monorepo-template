@@ -146,3 +146,6 @@ Lint.
 Build.
 
 Always.
+
+CI must enable pnpm cache for speed.
+Turbo remote cache is downstream concern.

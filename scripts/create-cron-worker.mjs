@@ -30,15 +30,15 @@ const cronFlagIndex = args.indexOf("--cron");
 const cronExpr = cronFlagIndex !== -1 ? args[cronFlagIndex + 1] : null;
 
 if (!workerName) {
-  console.error("❌ Missing worker name.");
-  console.error('Usage: pnpm create:cron-worker <name> --cron "*/30 * * * *"');
-  process.exit(1);
+    console.error("❌ Missing worker name.");
+    console.error('Usage: pnpm create:cron-worker <name> --cron "*/30 * * * *"');
+    process.exit(1);
 }
 
 if (!cronExpr) {
-  console.error("❌ Missing --cron argument.");
-  console.error('Example: pnpm create:cron-worker cleanup --cron "0 */5 * * *"');
-  process.exit(1);
+    console.error("❌ Missing --cron argument.");
+    console.error('Example: pnpm create:cron-worker cleanup --cron "0 */5 * * *"');
+    process.exit(1);
 }
 
 /**
@@ -46,9 +46,9 @@ if (!cronExpr) {
  */
 const cronParts = cronExpr.trim().split(/\s+/);
 if (cronParts.length !== 5) {
-  console.error("❌ Invalid cron expression:", cronExpr);
-  console.error('Cron must have exactly 5 fields. Example: "*/30 * * * *"');
-  process.exit(1);
+    console.error("❌ Invalid cron expression:", cronExpr);
+    console.error('Cron must have exactly 5 fields. Example: "*/30 * * * *"');
+    process.exit(1);
 }
 
 /**
@@ -57,7 +57,7 @@ if (cronParts.length !== 5) {
  */
 if (!fs.existsSync("apps")) fs.mkdirSync("apps");
 if (!fs.existsSync(path.join("apps", "cron")))
-  fs.mkdirSync(path.join("apps", "cron"));
+    fs.mkdirSync(path.join("apps", "cron"));
 
 console.log("✅ Creating StudioVault Cron Worker:", workerName);
 console.log("⏱️ Schedule:", cronExpr);
@@ -68,7 +68,7 @@ console.log("⏱️ Schedule:", cronExpr);
 process.chdir(path.join("apps", "cron"));
 
 execSync(`pnpm create cloudflare@latest ${workerName}`, {
-  stdio: "inherit",
+    stdio: "inherit",
 });
 
 /**
@@ -82,11 +82,11 @@ process.chdir(workerName);
 console.log("\n✅ Installing shared StudioVault workspace dependencies...");
 
 execSync("pnpm add @studiovault/utils @studiovault/types --workspace", {
-  stdio: "inherit",
+    stdio: "inherit",
 });
 
 execSync("pnpm add -D @studiovault/typescript-config --workspace", {
-  stdio: "inherit",
+    stdio: "inherit",
 });
 
 /**
@@ -97,6 +97,7 @@ console.log("✅ Ensuring tsconfig.json extends StudioVault baseline...");
 const tsconfigPath = "tsconfig.json";
 
 const desiredTsconfig = `{
+  "_studiovault": "StudioVault Monorepo Fix",
   "extends": "@studiovault/typescript-config/base.json",
 
   "compilerOptions": {
@@ -109,16 +110,21 @@ const desiredTsconfig = `{
 `;
 
 if (fs.existsSync(tsconfigPath)) {
-  const raw = fs.readFileSync(tsconfigPath, "utf8");
+    const raw = fs.readFileSync(tsconfigPath, "utf8");
 
-  if (raw.includes("@studiovault/typescript-config")) {
-    console.log("✅ tsconfig.json already patched. Skipping.");
-  } else {
-    fs.writeFileSync(tsconfigPath, desiredTsconfig);
-    console.log("✅ tsconfig.json patched successfully.");
-  }
+    if (raw.includes(`"_studiovault": "StudioVault Monorepo Fix"`)) {
+        console.log("✅ Already patched. Skipping.");
+    } else {
+        try {
+            fs.writeFileSync(tsconfigPath, desiredTsconfig);
+            console.log("✅ tsconfig.json patched successfully.");
+        } catch (err) {
+            console.warn("⚠️ Format changed, patch not applied. Manual review required.");
+            console.error(err);
+        }
+    }
 } else {
-  fs.writeFileSync(tsconfigPath, desiredTsconfig);
+    fs.writeFileSync(tsconfigPath, desiredTsconfig);
 }
 
 /**
@@ -129,26 +135,32 @@ console.log("✅ Ensuring wrangler.jsonc contains cron trigger...");
 const wranglerPath = "wrangler.jsonc";
 
 if (!fs.existsSync(wranglerPath)) {
-  console.error("❌ wrangler.jsonc not found. Cloudflare template changed.");
-  process.exit(1);
+    console.error("❌ wrangler.jsonc not found. Cloudflare template changed.");
+    process.exit(1);
 }
 
 const rawWrangler = fs.readFileSync(wranglerPath, "utf8");
 
-if (rawWrangler.includes('"triggers"')) {
-  console.log("✅ triggers already exists. Skipping insertion.");
+if (rawWrangler.includes("StudioVault Monorepo Fix")) {
+    console.log("✅ Already patched. Skipping.");
 } else {
-  const patched = rawWrangler.replace(
-    /"compatibility_date":\s*"([^"]+)",?/,
-    `"compatibility_date": "$1",\n\n  "triggers": {\n    "crons": ["${cronExpr}"]\n  },`
-  );
+    try {
+        // Insert marker and triggers as top-level JSON fields (format-independent)
+        const patched = rawWrangler.replace(
+            /^\s*\{/,
+            `{\n  "_studiovault": "StudioVault Monorepo Fix",\n  "triggers": {\n    "crons": ["${cronExpr}"]\n  },`
+        );
 
-  if (patched === rawWrangler) {
-    console.warn("⚠️ Failed to patch triggers. Wrangler format may have changed.");
-  } else {
-    fs.writeFileSync(wranglerPath, patched);
-    console.log("✅ Cron trigger inserted.");
-  }
+        if (patched === rawWrangler) {
+            console.warn("⚠️ Format changed, patch not applied. Manual review required.");
+        } else {
+            fs.writeFileSync(wranglerPath, patched);
+            console.log("✅ Cron trigger inserted.");
+        }
+    } catch (err) {
+        console.warn("⚠️ Format changed, patch not applied. Manual review required.");
+        console.error(err);
+    }
 }
 
 /**
@@ -159,8 +171,8 @@ console.log("✅ Writing scheduled worker entrypoint...");
 const entryFile = path.join("src", "index.ts");
 
 fs.writeFileSync(
-  entryFile,
-  `import { slugify } from "@studiovault/utils";
+    entryFile,
+    `import { slugify } from "@studiovault/utils";
 
 export default {
   /**

@@ -1,3 +1,5 @@
+import "server-only";
+
 /*
  * StudioVault Storage Contracts
  * No R2/S3 bindings here — portable definitions only.

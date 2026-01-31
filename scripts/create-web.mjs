@@ -73,15 +73,17 @@ if (!fs.existsSync(nextConfigPath)) {
 const raw = fs.readFileSync(nextConfigPath, "utf8");
 
 /**
- * If already patched, do nothing.
+ * If already patched (marker present), do nothing.
  */
-if (raw.includes("transpilePackages")) {
-  console.log("✅ next.config.ts already contains transpilePackages. Skipping patch.");
+if (raw.includes(`"_studiovault": "StudioVault Monorepo Fix"`)
+) {
+  console.log("✅ Already patched. Skipping.");
 } else {
   console.log("✅ Applying StudioVault transpilePackages patch...");
 
   const patched = `import type { NextConfig } from "next";
 
+// StudioVault Monorepo Fix
 const nextConfig: NextConfig = {
   /**
    * StudioVault Monorepo Fix:
@@ -97,8 +99,13 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 `;
 
-  fs.writeFileSync(nextConfigPath, patched);
-  console.log("✅ next.config.ts patched successfully.");
+  try {
+    fs.writeFileSync(nextConfigPath, patched);
+    console.log("✅ next.config.ts patched successfully.");
+  } catch (err) {
+    console.warn("⚠️ Format changed, patch not applied. Manual review required.");
+    console.error(err);
+  }
 }
 
 /**

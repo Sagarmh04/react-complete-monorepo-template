@@ -1,3 +1,5 @@
+import "server-only";
+
 /*
  * StudioVault Database Contracts
  * No runtime drivers here — only schema + types.

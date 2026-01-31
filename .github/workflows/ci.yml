@@ -12,14 +12,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install pnpm (9.15.4)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
       - name: Setup Node.js (20 LTS)
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "pnpm" # ✅ Makes installs dramatically faster
-
-      - name: Install pnpm (9.15.4)
-        run: npm install -g pnpm@9.15.4
+          cache: "pnpm"
 
       - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile

@@ -138,3 +138,14 @@ Do not remove it.
 The ecosystem is unstable.
 
 This override is stability.
+
+
+## This does NOT freeze Vite
+
+The override is scoped:
+
+tsup>rollup
+
+Vite and frontend tooling remain free to use Rollup v4+.
+
+Do not global-pin Rollup.

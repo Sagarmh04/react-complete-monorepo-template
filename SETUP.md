@@ -286,3 +286,14 @@ Infrastructure is here only to support shipping applications.
 
 Not to become the application.
 
+## Mandatory Reading
+
+This repository is governed by the Constitution in:
+
+rules/
+
+Start with:
+
+rules/00-constitution.md
+
+Nothing should be edited until those rules are understood.

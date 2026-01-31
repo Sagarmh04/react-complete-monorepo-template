@@ -178,3 +178,6 @@ Permanent.
 Vendor-neutral core.
 
 Do not scatter background compute.
+
+This template provides the processor source.
+Deployment wiring is downstream responsibility.
