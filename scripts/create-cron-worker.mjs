@@ -67,7 +67,7 @@ console.log("⏱️ Schedule:", cronExpr);
  */
 process.chdir(path.join("apps", "cron"));
 
-execSync(`pnpm create cloudflare@2.62.5 ${workerName} --no-install`, {
+execSync(`pnpm create cloudflare@2.62.5 ${workerName}`, {
     stdio: "inherit",
 });
 
@@ -81,7 +81,7 @@ process.chdir(workerName);
  */
 console.log("\n✅ Installing shared Template workspace dependencies...");
 
-execSync("pnpm add @template/utils @template/types @template/database @template/storage --workspace ", {
+execSync("pnpm add @template/utils @template/types @template/database @template/storage @template/env --workspace ", {
     stdio: "inherit",
 });
 
