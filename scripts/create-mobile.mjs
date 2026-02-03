@@ -30,7 +30,7 @@ process.chdir(baseDir);
  * Step 1: Official Expo scaffold (pinned, no install)
  */
 execSync(
-  `pnpm dlx create-expo-app@3.5.3 ${appName} --no-install`,
+  `pnpm dlx create-expo-app@3.5.3 ${appName}`,
   { stdio: "inherit" }
 );
 
@@ -50,7 +50,7 @@ console.log("\n✅ Installing Template contract-only workspace packages...");
  * ❌ ui forbidden in Expo
  */
 execSync(
-  "pnpm add @template/types @template/utils @template/database @template/storage --workspace",
+  "pnpm add @template/types @template/utils @template/database @template/storage @template/env --workspace",
   { stdio: "inherit" }
 );
 
